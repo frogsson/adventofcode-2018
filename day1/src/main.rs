@@ -1,43 +1,30 @@
 use std::fs;
+use std::collections::HashSet;
 
 fn main() {
     let content = fs::read_to_string("puzzleinput")
         .expect("error reading file");
 
-    let mut freqvec = Vec::new();
-    let mut frequencyfin: i32 = 0;
+    let mut hashfreq = HashSet::new();
     let mut frequency: i32 = 0;
-    let mut firsttwice: i32 = 0;
-    let mut iteration: i32 = 1;
+    let mut iteration: i32 = 0;
     let mut br = true;
 
+    let mut ch1: i32 = 0;
+
     while br {
-        println!("starting iteration: {}", iteration);
         for l in content.lines() {
-            match l.parse::<i32>() {
-                Ok(n) => {
-                    // let beforechange = frequency; 
-                    frequency += n;
-                    if iteration == 1 {
-                        frequencyfin += n;
-                    }
-                    // println!("Current frequency {}, change of {}, resulting {}.", beforechange, l, frequency)
-                }
-                Err(e) => println!("{}", e)
-            }
+            let adjustment: i32 = l.parse().unwrap();
+            frequency += adjustment;
 
-            for value in freqvec.iter() {
-                if *value == frequency && br { 
-                    firsttwice = frequency; 
-                    br = false;
-                }
-            }
-
-            freqvec.push(frequency);
+            br = hashfreq.insert(frequency);
+            if ! br { break }
         }
+        if iteration == 0 { ch1 = frequency }
         iteration += 1;
     }
+    let ch2 = frequency;
 
-    println!("challenge 1 answer: {}", frequencyfin);
-    println!("challenge 2 answer: {}", firsttwice);
+    println!("challenge 1 answer: {}", ch1);
+    println!("challenge 2 answer: {}", ch2);
 }
