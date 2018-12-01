@@ -2,26 +2,24 @@ use std::fs;
 use std::collections::HashSet;
 
 fn main() {
-    let content = fs::read_to_string("puzzleinput")
+    let content = fs::read_to_string("./puzzleinput")
         .expect("error reading file");
 
     let mut hashfreq = HashSet::new();
     let mut frequency: i32 = 0;
-    let mut iteration: i32 = 0;
-    let mut notreachtwice = true;
+    let mut iteration: bool = true;
+    let mut notreachtwice: bool = true;
 
     let mut ch1: i32 = 0;
 
     while notreachtwice {
         for l in content.lines() {
-            let adjustment: i32 = l.parse().unwrap();
-            frequency += adjustment;
+            frequency += l.parse::<i32>().unwrap();
 
             notreachtwice = hashfreq.insert(frequency);
             if ! notreachtwice { break }
         }
-        if iteration == 0 { ch1 = frequency }
-        iteration += 1;
+        if iteration { ch1 = frequency; iteration = false }
     }
     let ch2 = frequency;
 
