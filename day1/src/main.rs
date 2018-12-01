@@ -8,17 +8,17 @@ fn main() {
     let mut hashfreq = HashSet::new();
     let mut frequency: i32 = 0;
     let mut iteration: i32 = 0;
-    let mut br = true;
+    let mut notreachtwice = true;
 
     let mut ch1: i32 = 0;
 
-    while br {
+    while notreachtwice {
         for l in content.lines() {
             let adjustment: i32 = l.parse().unwrap();
             frequency += adjustment;
 
-            br = hashfreq.insert(frequency);
-            if ! br { break }
+            notreachtwice = hashfreq.insert(frequency);
+            if ! notreachtwice { break }
         }
         if iteration == 0 { ch1 = frequency }
         iteration += 1;
