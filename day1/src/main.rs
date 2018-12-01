@@ -2,7 +2,7 @@ use std::fs;
 use std::collections::HashSet;
 
 fn main() {
-    let content = fs::read_to_string("./puzzleinput")
+    let content = fs::read_to_string("puzzleinput2")
         .expect("error reading file");
 
     let mut hashfreq = HashSet::new();
@@ -23,6 +23,6 @@ fn main() {
     }
     let ch2 = frequency;
 
-    println!("challenge 1 answer: {}", ch1);
-    println!("challenge 2 answer: {}", ch2);
+    println!("part 1 answer: {}", ch1);
+    println!("part 2 answer: {}", ch2);
 }
