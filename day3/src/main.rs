@@ -3,6 +3,7 @@ use std::fs;
 fn main() {
     let mut fabx = vec![vec![0;1001]; 1001];
     let elves = fs::read_to_string("input").expect("error reading file");
+    let mut theoneelf = String::new();
 
     for elf in elves.lines() {
         let s: Vec<&str> = elf.split(" ").collect();
@@ -33,5 +34,35 @@ fn main() {
             }
         }
     }
-    println!("{}", count);
+
+    for elf in elves.lines() {
+        let s: Vec<&str> = elf.split(" ").collect();
+        let mut c = String::from(s[2]);
+        c.pop();
+        let c: Vec<&str> = c.split(",").collect();
+
+        let startx = c[1].parse::<i16>().unwrap();
+        let starty = c[0].parse::<i16>().unwrap();
+
+        let c = String::from(s[3]);
+        let c: Vec<&str> = c.split("x").collect();
+
+        let mut claimx = c[1].parse::<i16>().unwrap();
+        let mut claimy = c[0].parse::<i16>().unwrap();
+
+        let mut count = 0;
+        for x in startx..startx+claimx {
+            for y in starty..starty+claimy {
+                if fabx[x as usize][y as usize] as usize == 1 {
+                    count += 1;
+                }
+            }
+        }
+        if claimx * claimy == count {
+            theoneelf = s[0].to_owned();
+        }
+    }
+
+    println!("part 1: {}", count);
+    println!("part 2: {}", theoneelf);
 }
