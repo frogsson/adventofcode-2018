@@ -1,0 +1,68 @@
+use std::fs;
+use std::collections::HashMap;
+
+#[derive(Debug)]
+struct Info {
+    month: i8,
+    day: i8,
+    hour: i8,
+    minute: i8,
+    sorter: i32,
+    action: String,
+}
+
+fn main() {
+    let content = fs::read_to_string("inputex").expect("err");
+
+    let mut notes = Vec::new();
+
+    for event in content.lines() {
+        let mut t: Vec<&str> = event.split("] ").collect();
+        let datetime: Vec<&str> = t[0].split(|c| c == ' ' || c == '-' || c == ':' || c == '[').collect();
+        let action: String =  event.split("] ").collect::<Vec<_>>()[1].to_string();
+        let mut sorter = String::new();
+        for i in 2..6 {
+            sorter.push_str(datetime[i]);
+        }
+
+        let xoxo = Info {
+            month: datetime[2].parse().unwrap(),
+            day: datetime[3].parse().unwrap(),
+            hour: datetime[4].parse().unwrap(),
+            minute: datetime[5].parse().unwrap(),
+            sorter: sorter.parse().unwrap(),
+            action: action,
+        };
+
+        notes.insert(0, xoxo);
+    }
+
+    notes.sort_by(|a, b| a.sorter.cmp(&b.sorter));
+
+    // Info { month: 11, day: 1, hour: 0, minute: 0, sorter: 11010000, action: "Guard #10 begins shift" }
+    // Info { month: 11, day: 1, hour: 0, minute: 5, sorter: 11010005, action: "falls asleep" }
+    // Info { month: 11, day: 1, hour: 0, minute: 25, sorter: 11010025, action: "wakes up" }
+
+    let mut guards = HashMap::new();
+    let mut guardid: &str = "";
+
+    for note in &notes {
+        // println!("{:?}", note);
+        let action_parse: Vec<&str> = note.action.split(" ").collect();
+
+        if action_parse[0] == "Guard" {
+            guardid = action_parse[1];
+            if ! guards.contains_key(guardid) {
+                let mut h = HashMap::new();
+                for num in 1..61 {
+                    h.insert(num, 0);
+                }
+                guards.insert(guardid, h);
+            }
+        } else if action_parse[0] == "falls" {
+            // guards.get_mut(guardid).unwrap()[note.minute] += 1;
+            println!("{:?}", guards.get_mut(guardid).unwrap()[&note.minute]);
+        }
+    }
+    // println!("{:?}", guards);
+}
